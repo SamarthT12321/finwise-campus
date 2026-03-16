@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinWise Campus</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dm:'DM Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+  --g0:#0a0f0d;--g1:#0f1f18;--g2:#132918;--g3:#1a3d22;
+  --glo:#22c55e;--glm:#16a34a;--gll:#4ade80;
+  --acc:#f0fdf4;--acc2:#dcfce7;
+  --amber:#fbbf24;--amberD:#92400e;--amberL:#fef3c7;
+  --blue:#3b82f6;--blueD:#1e3a8a;--blueL:#eff6ff;
+  --coral:#f97316;--coralD:#7c2d12;--coralL:#fff7ed;
+  --purple:#a855f7;--purpleD:#581c87;--purpleL:#faf5ff;
+  --red:#ef4444;--slate:#94a3b8;
+  --surface:rgba(255,255,255,0.04);--surface2:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.15);
+  --text:#f0fdf4;--muted:#86efac;--dimmed:#4ade80;--faint:#166534;
+  --radius:14px;--radius-sm:9px;
+}
+html,body{background:var(--g0);color:var(--text);font-family:var(--dm);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+.app{display:flex;flex-direction:column;min-height:100vh}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:58px;background:rgba(10,15,13,0.92);border-bottom:0.5px solid var(--border);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:32px;height:32px;background:var(--glo);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;font-weight:500;color:#0a0f0d}
+.logo-text{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--text);letter-spacing:-0.5px}
+.logo-text span{color:var(--glo)}
+.nav{display:flex;gap:2px}
+.nav-btn{background:none;border:none;color:var(--slate);font-family:var(--dm);font-size:13px;padding:6px 13px;border-radius:20px;cursor:pointer;transition:.15s;font-weight:400}
+.nav-btn:hover{color:var(--text);background:var(--surface2)}
+.nav-btn.active{background:rgba(34,197,94,0.15);color:var(--glo);font-weight:500}
+.xp-pill{display:flex;align-items:center;gap:5px;background:var(--amberL);color:var(--amberD);border-radius:20px;padding:5px 12px;font-family:var(--mono);font-size:12px;font-weight:500}
+.page{display:none;padding:28px 24px 48px;max-width:900px;margin:0 auto;width:100%;animation:fadeUp .22s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+h1{font-size:26px;font-weight:600;line-height:1.25;letter-spacing:-.5px}
+h2{font-size:20px;font-weight:600;line-height:1.3;letter-spacing:-.3px}
+h3{font-size:16px;font-weight:500;line-height:1.4}
+.hero{background:linear-gradient(135deg,var(--g2) 0%,var(--g3) 60%,rgba(34,197,94,.08) 100%);border:0.5px solid rgba(34,197,94,.2);border-radius:20px;padding:32px;margin-bottom:28px;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:-60px;right:-60px;width:260px;height:260px;background:radial-gradient(circle,rgba(34,197,94,.12) 0%,transparent 70%);pointer-events:none}
+.hero-glow2{position:absolute;bottom:-80px;left:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(74,222,128,.07) 0%,transparent 70%);pointer-events:none}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,.12);border:0.5px solid rgba(34,197,94,.25);color:var(--glo);border-radius:20px;padding:4px 12px;font-size:11px;font-family:var(--mono);font-weight:500;margin-bottom:16px}
+.hero h1{color:var(--text);margin-bottom:10px}
+.hero p{color:var(--muted);font-size:14px;max-width:480px;margin-bottom:22px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-primary{background:var(--glo);color:#0a0f0d;border:none;padding:10px 22px;border-radius:22px;font-family:var(--dm);font-size:13px;font-weight:600;cursor:pointer;transition:.18s;letter-spacing:-.2px}
+.btn-primary:hover{background:var(--gll);transform:translateY(-1px)}
+.btn-ghost{background:var(--surface2);color:var(--text);border:0.5px solid var(--border2);padding:10px 20px;border-radius:22px;font-family:var(--dm);font-size:13px;font-weight:500;cursor:pointer;transition:.18s}
+.btn-ghost:hover{background:var(--surface);border-color:rgba(255,255,255,.25)}
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--radius) var(--radius) 0 0}
+.stat-card.s-green::before{background:var(--glo)}
+.stat-card.s-amber::before{background:var(--amber)}
+.stat-card.s-blue::before{background:var(--blue)}
+.stat-card.s-purple::before{background:var(--purple)}
+.stat-val{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--text);margin:4px 0 2px}
+.stat-lbl{font-size:11px;color:var(--slate)}
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sec-title{font-size:15px;font-weight:600;color:var(--text)}
+.sec-link{font-size:12px;color:var(--dimmed);cursor:pointer;background:none;border:none;font-family:var(--dm)}
+.sec-link:hover{color:var(--glo)}
+.modules-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:32px}
+.mod-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+.mod-card:hover{border-color:var(--border2);transform:translateY(-2px);background:var(--surface2)}
+.mod-card-bar{height:3px;position:absolute;top:0;left:0;right:0;border-radius:var(--radius) var(--radius) 0 0}
+.mod-icon{font-size:20px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;margin-bottom:12px}
+.mod-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.mod-desc{font-size:11px;color:var(--slate);line-height:1.5;margin-bottom:12px}
+.mod-footer{display:flex;justify-content:space-between;align-items:center}
+.mod-prog{font-size:10px;font-family:var(--mono);color:var(--dimmed)}
+.mod-xp{font-size:10px;font-family:var(--mono);font-weight:500;color:var(--amber);background:rgba(251,191,36,.1);border-radius:10px;padding:2px 7px}
+.mod-status{position:absolute;top:14px;right:14px;font-size:9px;font-family:var(--mono);font-weight:500;padding:3px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:.8px}
+.track-section{margin-bottom:32px}
+.track-row{display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:6px}
+.track-icon{font-size:16px;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.track-info{flex:1;min-width:0}
+.track-name{font-size:13px;font-weight:500;color:var(--text)}
+.track-sub{font-size:11px;color:var(--slate);font-family:var(--mono)}
+.prog-bar{height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:6px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;transition:.6s ease}
+.track-pct{font-family:var(--mono);font-size:12px;font-weight:500;min-width:32px;text-align:right}
+.lesson-header{border-radius:var(--radius);padding:26px;margin-bottom:22px;position:relative;overflow:hidden}
+.lesson-tag{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;opacity:.75;margin-bottom:10px}
+.lesson-header h2{font-size:22px;font-weight:600;margin-bottom:8px}
+.lesson-header p{font-size:13px;opacity:.85;line-height:1.65;max-width:520px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:0.5px solid var(--border);color:var(--muted);border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;margin-bottom:20px;font-family:var(--dm);transition:.15s}
+.back-btn:hover{border-color:var(--border2);color:var(--text)}
+.content-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.content-card h3{font-size:14px;font-weight:600;margin-bottom:10px;color:var(--text)}
+.quiz-q{font-size:14px;font-weight:500;line-height:1.6;color:var(--text);margin-bottom:14px}
+.quiz-opts{display:flex;flex-direction:column;gap:7px}
+.quiz-opt{background:var(--surface2);border:0.5px solid var(--border);color:var(--text);border-radius:var(--radius-sm);padding:11px 14px;cursor:pointer;font-size:13px;font-family:var(--dm);text-align:left;transition:.15s;display:flex;align-items:center;gap:10px}
+.quiz-opt:hover:not([disabled]){border-color:var(--border2);background:rgba(255,255,255,.1)}
+.quiz-opt[disabled]{cursor:default}
+.quiz-opt.correct{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.4);color:var(--glo)}
+.quiz-opt.wrong{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#fca5a5}
+.quiz-opt-key{font-family:var(--mono);font-size:10px;font-weight:500;width:20px;height:20px;border-radius:5px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--slate)}
+.quiz-feedback{padding:13px 16px;border-radius:var(--radius-sm);font-size:13px;line-height:1.6;margin-top:12px;display:none}
+.quiz-feedback.show{display:block}
+.sim-card{background:var(--g1);border:0.5px solid rgba(34,197,94,.15);border-radius:var(--radius);padding:22px;margin-bottom:16px}
+.sim-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px}
+.sim-desc{font-size:12px;color:var(--slate);margin-bottom:18px;line-height:1.55}
+.sim-ctrl{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sim-ctrl-label{font-size:11px;color:var(--muted);width:130px;flex-shrink:0;font-family:var(--mono)}
+.sim-ctrl-val{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text);min-width:64px;text-align:right}
+input[type=range]{flex:1;-webkit-appearance:none;height:3px;background:var(--border2);border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--glo);cursor:pointer}
+.sim-result{margin-top:16px;background:rgba(34,197,94,.08);border:0.5px solid rgba(34,197,94,.25);border-radius:var(--radius-sm);padding:16px}
+.sim-result-lbl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--dimmed);margin-bottom:4px}
+.sim-result-val{font-family:var(--mono);font-size:30px;font-weight:500;color:var(--glo);line-height:1}
+.sim-result-sub{font-size:11px;color:var(--muted);margin-top:4px;font-family:var(--mono)}
+.bar-chart{display:flex;align-items:flex-end;gap:4px;height:70px;margin-top:14px;padding:0 2px}
+.bar{flex:1;border-radius:3px 3px 0 0;min-width:12px;transition:.4s ease;position:relative;cursor:default}
+.bar-tip{position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--g0);border:0.5px solid var(--border2);border-radius:5px;padding:3px 6px;font-family:var(--mono);font-size:9px;color:var(--text);white-space:nowrap;opacity:0;transition:.15s;pointer-events:none}
+.bar:hover .bar-tip{opacity:1}
+.budget-split{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px}
+.budget-bucket{border-radius:var(--radius-sm);padding:14px;text-align:center}
+.bucket-lbl{font-size:9px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.bucket-val{font-family:var(--mono);font-size:24px;font-weight:500;line-height:1}
+.bucket-sub{font-size:10px;margin-top:3px;opacity:.7}
+.gloss-search{width:100%;background:var(--surface2);border:0.5px solid var(--border2);color:var(--text);border-radius:var(--radius-sm);padding:10px 14px;font-family:var(--dm);font-size:13px;margin-bottom:14px;outline:none;transition:.15s}
+.gloss-search:focus{border-color:rgba(34,197,94,.4)}
+.gloss-filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.gloss-filter{background:var(--surface);border:0.5px solid var(--border);color:var(--slate);border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:var(--dm);transition:.15s}
+.gloss-filter:hover,.gloss-filter.active{border-color:var(--border2);color:var(--text);background:var(--surface2)}
+.gloss-filter.active{border-color:rgba(34,197,94,.35);color:var(--glo)}
+.term{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:6px;cursor:pointer;transition:.15s}
+.term:hover{border-color:var(--border2);background:var(--surface2)}
+.term-word{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.term-def{font-size:12px;color:var(--slate);line-height:1.55}
+.term-tag{display:inline-block;margin-top:6px;font-size:9px;font-family:var(--mono);font-weight:500;padding:2px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:.6px}
+.lb-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius-sm);margin-bottom:6px;background:var(--surface);border:0.5px solid var(--border);transition:.15s}
+.lb-row:hover{border-color:var(--border2)}
+.lb-rank{font-family:var(--mono);font-weight:500;font-size:13px;min-width:26px;color:var(--slate)}
+.lb-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;font-family:var(--mono)}
+.lb-name{flex:1;font-size:13px;font-weight:500;color:var(--text)}
+.lb-badge{font-size:10px;font-family:var(--mono);font-weight:500;padding:3px 8px;border-radius:10px;background:rgba(251,191,36,.1);color:var(--amber)}
+.lb-xp{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--amber);min-width:64px;text-align:right}
+.challenge{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px;position:relative;overflow:hidden}
+.challenge.featured{border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.04)}
+.challenge-accent{position:absolute;top:0;left:0;width:3px;height:100%;border-radius:var(--radius) 0 0 var(--radius)}
+.challenge-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.challenge-ico{font-size:18px;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.challenge-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.challenge-desc{font-size:12px;color:var(--slate);line-height:1.55;margin-bottom:12px}
+.challenge-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.cpill{font-size:10px;font-family:var(--mono);font-weight:500;padding:3px 9px;border-radius:20px}
+.btn-challenge{width:100%;background:rgba(34,197,94,.12);border:0.5px solid rgba(34,197,94,.3);color:var(--glo);border-radius:var(--radius-sm);padding:10px;font-family:var(--dm);font-size:13px;font-weight:500;cursor:pointer;transition:.15s}
+.btn-challenge:hover{background:rgba(34,197,94,.2)}
+.streak-banner{background:rgba(251,191,36,.06);border:0.5px solid rgba(251,191,36,.2);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.streak-fire{font-size:22px}
+.streak-info{flex:1}
+.streak-title{font-size:13px;font-weight:500;color:var(--amber)}
+.streak-sub{font-size:11px;color:var(--slate);font-family:var(--mono)}
+.streak-days{display:flex;gap:4px}
+.streak-day{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--mono);font-weight:500}
+.streak-day.done{background:var(--amber);color:#0a0f0d}
+.streak-day.today{background:rgba(251,191,36,.2);border:0.5px solid var(--amber);color:var(--amber)}
+.streak-day.empty{background:var(--surface);border:0.5px solid var(--border);color:var(--slate)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="topbar">
+  <div class="logo">
+    <div class="logo-mark">$</div>
+    <div class="logo-text">Fin<span>Wise</span></div>
+  </div>
+  <div class="nav">
+    <button class="nav-btn active" onclick="nav('home',this)">Home</button>
+    <button class="nav-btn" onclick="nav('learn',this)">Learn</button>
+    <button class="nav-btn" onclick="nav('tools',this)">Tools</button>
+    <button class="nav-btn" onclick="nav('glossary',this)">Glossary</button>
+    <button class="nav-btn" onclick="nav('community',this)">Community</button>
+  </div>
+  <div class="xp-pill">⚡ <span id="xp-count">340</span> XP</div>
+</nav>
+
+<!-- HOME -->
+<div id="pg-home" class="page active">
+  <div class="hero">
+    <div class="hero-glow"></div><div class="hero-glow2"></div>
+    <div class="hero-tag">🎓 Built for College Students</div>
+    <h1>Your money education<br>starts here.</h1>
+    <p>Master budgeting, investing, credit, and student loans through interactive lessons, real simulators, and a community that learns together.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="nav('learn',document.querySelectorAll('.nav-btn')[1])">Start learning →</button>
+      <button class="btn-ghost" onclick="nav('tools',document.querySelectorAll('.nav-btn')[2])">Try a simulator</button>
+    </div>
+  </div>
+  <div class="streak-banner">
+    <div class="streak-fire">🔥</div>
+    <div class="streak-info">
+      <div class="streak-title">5-day learning streak</div>
+      <div class="streak-sub">+10 XP bonus for each daily lesson completed</div>
+    </div>
+    <div class="streak-days">
+      <div class="streak-day done">M</div><div class="streak-day done">T</div><div class="streak-day done">W</div><div class="streak-day done">T</div><div class="streak-day today">F</div><div class="streak-day empty">S</div><div class="streak-day empty">S</div>
+    </div>
+  </div>
+  <div class="stat-strip">
+    <div class="stat-card s-green"><div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--dimmed)">Lessons done</div><div class="stat-val">14</div><div class="stat-lbl">of 45 total</div></div>
+    <div class="stat-card s-amber"><div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--dimmed)">XP earned</div><div class="stat-val">340</div><div class="stat-lbl">rank #3 on campus</div></div>
+    <div class="stat-card s-blue"><div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--dimmed)">Quizzes passed</div><div class="stat-val">11</div><div class="stat-lbl">87% avg score</div></div>
+    <div class="stat-card s-purple"><div style="font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--dimmed)">Topics covered</div><div class="stat-val">2/5</div><div class="stat-lbl">tracks in progress</div></div>
+  </div>
+  <div class="sec-header"><div class="sec-title">Your tracks</div><button class="sec-link" onclick="nav('learn',document.querySelectorAll('.nav-btn')[1])">View all →</button></div>
+  <div class="track-section">
+    <div class="track-row"><div class="track-icon" style="background:rgba(34,197,94,.1)">💰</div><div class="track-info"><div class="track-name">Budgeting & Saving</div><div class="track-sub">6/10 lessons · 120 XP</div><div class="prog-bar"><div class="prog-fill" style="width:60%;background:var(--glo)"></div></div></div><div class="track-pct" style="color:var(--glo)">60%</div></div>
+    <div class="track-row"><div class="track-icon" style="background:rgba(251,191,36,.1)">📈</div><div class="track-info"><div class="track-name">Intro to Investing</div><div class="track-sub">2/8 lessons · 50 XP</div><div class="prog-bar"><div class="prog-fill" style="width:25%;background:var(--amber)"></div></div></div><div class="track-pct" style="color:var(--amber)">25%</div></div>
+    <div class="track-row"><div class="track-icon" style="background:rgba(249,115,22,.1)">💳</div><div class="track-info"><div class="track-name">Credit & Debt</div><div class="track-sub">1/7 lessons · 20 XP</div><div class="prog-bar"><div class="prog-fill" style="width:10%;background:var(--coral)"></div></div></div><div class="track-pct" style="color:var(--coral)">10%</div></div>
+    <div class="track-row"><div class="track-icon" style="background:rgba(59,130,246,.1)">🎓</div><div class="track-info"><div class="track-name">Student Loans</div><div class="track-sub">0/9 lessons · 0 XP</div><div class="prog-bar"><div class="prog-fill" style="width:0%;background:var(--blue)"></div></div></div><div class="track-pct" style="color:var(--slate)">0%</div></div>
+  </div>
+  <div class="sec-header"><div class="sec-title">Daily challenge</div></div>
+  <div class="challenge featured">
+    <div class="challenge-accent" style="background:var(--amber)"></div>
+    <div class="challenge-top">
+      <div class="challenge-ico" style="background:rgba(251,191,36,.1)">🔥</div>
+      <div><div class="challenge-name">50/30/20 Rule: Real Scenario</div></div>
+    </div>
+    <div class="challenge-desc">You just got your first part-time job — $1,800/month after tax. Rent is $700. Use the 50/30/20 framework to build a monthly budget that leaves room to start investing.</div>
+    <div class="challenge-meta">
+      <span class="cpill" style="background:rgba(251,191,36,.1);color:var(--amber)">+50 XP</span>
+      <span class="cpill" style="background:var(--surface2);color:var(--slate)">5–7 min</span>
+      <span class="cpill" style="background:rgba(34,197,94,.08);color:var(--glo)">Budgeting</span>
+    </div>
+    <button class="btn-challenge" onclick="scrollToSim()">Start challenge →</button>
+  </div>
+</div>
+
+<!-- LEARN -->
+<div id="pg-learn" class="page">
+  <div class="sec-header" style="margin-bottom:8px"><h2>All modules</h2></div>
+  <p style="color:var(--slate);font-size:13px;margin-bottom:22px">Each module combines short lessons, knowledge checks, and real-world scenarios. Earn XP as you complete each one.</p>
+  <div class="modules-grid">
+    <div class="mod-card" onclick="openLesson('budget')">
+      <div class="mod-card-bar" style="background:var(--glo)"></div>
+      <span class="mod-status" style="background:rgba(34,197,94,.1);color:var(--glo)">In progress</span>
+      <div class="mod-icon" style="background:rgba(34,197,94,.1)">💰</div>
+      <div class="mod-name">Budgeting Basics</div>
+      <div class="mod-desc">50/30/20 rule, expense tracking, spending triggers, and building habits that last.</div>
+      <div class="mod-footer"><span class="mod-prog">6/10 lessons</span><span class="mod-xp">+120 XP</span></div>
+    </div>
+    <div class="mod-card" onclick="openLesson('invest')">
+      <div class="mod-card-bar" style="background:var(--amber)"></div>
+      <span class="mod-status" style="background:rgba(251,191,36,.1);color:var(--amber)">New</span>
+      <div class="mod-icon" style="background:rgba(251,191,36,.1)">📈</div>
+      <div class="mod-name">Intro to Investing</div>
+      <div class="mod-desc">Compound interest, index funds, time horizon, and why starting at 20 beats starting at 30.</div>
+      <div class="mod-footer"><span class="mod-prog">2/8 lessons</span><span class="mod-xp">+200 XP</span></div>
+    </div>
+    <div class="mod-card" onclick="openLesson('credit')">
+      <div class="mod-card-bar" style="background:var(--coral)"></div>
+      <span class="mod-status" style="background:rgba(249,115,22,.1);color:var(--coral)">Locked</span>
+      <div class="mod-icon" style="background:rgba(249,115,22,.1)">💳</div>
+      <div class="mod-name">Credit & Debt</div>
+      <div class="mod-desc">How your FICO score is built, why your first card matters, APR traps to avoid.</div>
+      <div class="mod-footer"><span class="mod-prog">0/7 lessons</span><span class="mod-xp">+180 XP</span></div>
+    </div>
+    <div class="mod-card" onclick="openLesson('loans')">
+      <div class="mod-card-bar" style="background:var(--blue)"></div>
+      <span class="mod-status" style="background:rgba(59,130,246,.1);color:var(--blue)">Locked</span>
+      <div class="mod-icon" style="background:rgba(59,130,246,.1)">🎓</div>
+      <div class="mod-name">Student Loans</div>
+      <div class="mod-desc">Federal vs private, interest accumulation, IBR, and Public Service Loan Forgiveness.</div>
+      <div class="mod-footer"><span class="mod-prog">0/9 lessons</span><span class="mod-xp">+220 XP</span></div>
+    </div>
+    <div class="mod-card" onclick="openLesson('taxes')">
+      <div class="mod-card-bar" style="background:var(--purple)"></div>
+      <span class="mod-status" style="background:rgba(168,85,247,.1);color:var(--purple)">Locked</span>
+      <div class="mod-icon" style="background:rgba(168,85,247,.1)">📋</div>
+      <div class="mod-name">Taxes 101</div>
+      <div class="mod-desc">How tax brackets really work, W-2 vs W-4, filing your first return without a CPA.</div>
+      <div class="mod-footer"><span class="mod-prog">0/6 lessons</span><span class="mod-xp">+150 XP</span></div>
+    </div>
+    <div class="mod-card" style="opacity:.55;pointer-events:none">
+      <div class="mod-card-bar" style="background:var(--slate)"></div>
+      <span class="mod-status" style="background:var(--surface2);color:var(--slate)">Soon</span>
+      <div class="mod-icon" style="background:var(--surface)">🛡️</div>
+      <div class="mod-name">Emergency Funds</div>
+      <div class="mod-desc">Why 3–6 months saved can be the most powerful single financial move you make.</div>
+      <div class="mod-footer"><span class="mod-prog">0/5 lessons</span><span class="mod-xp">+100 XP</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- LESSON -->
+<div id="pg-lesson" class="page">
+  <button class="back-btn" onclick="nav('learn',document.querySelectorAll('.nav-btn')[1])">← Back to modules</button>
+  <div id="lesson-mount"></div>
+</div>
+
+<!-- TOOLS -->
+<div id="pg-tools" class="page">
+  <h2 style="margin-bottom:6px">Interactive tools</h2>
+  <p style="color:var(--slate);font-size:13px;margin-bottom:24px">These aren't just calculators — they're simulators that teach by showing. Drag the sliders and watch the math change in real time.</p>
+  <div class="sim-card" id="sim-compound">
+    <div class="sim-title">Compound interest simulator</div>
+    <div class="sim-desc">The single most important concept in personal finance. Move the sliders and watch how time and consistency create wealth — even on a student budget.</div>
+    <div class="sim-ctrl"><span class="sim-ctrl-label">Starting amount</span><input type="range" min="0" max="5000" step="50" value="500" id="ci-p" oninput="calcCI()"><span class="sim-ctrl-val" id="ci-pv">$500</span></div>
+    <div class="sim-ctrl"><span class="sim-ctrl-label">Monthly deposit</span><input type="range" min="0" max="500" step="10" value="100" id="ci-m" oninput="calcCI()"><span class="sim-ctrl-val" id="ci-mv">$100</span></div>
+    <div class="sim-ctrl"><span class="sim-ctrl-label">Annual return</span><input type="range" min="1" max="15" step="0.5" value="7" id="ci-r" oninput="calcCI()"><span class="sim-ctrl-val" id="ci-rv">7.0%</span></div>
+    <div class="sim-ctrl"><span class="sim-ctrl-label">Years to grow</span><input type="range" min="1" max="45" step="1" value="10" id="ci-y" oninput="calcCI()"><span class="sim-ctrl-val" id="ci-yv">10 yrs</span></div>
+    <div class="sim-result">
+      <div class="sim-result-lbl">Future value</div>
+      <div class="sim-result-val" id="ci-out">—</div>
+      <div class="sim-result-sub" id="ci-sub">—</div>
+    </div>
+    <div class="bar-chart" id="ci-bars"></div>
+  </div>
+  <div class="sim-card" id="sim-budget">
+    <div class="sim-title">50/30/20 budget builder</div>
+    <div class="sim-desc">A proven framework: 50% of take-home pay for needs, 30% for wants, 20% for savings and debt. Adjust your income to see how it splits.</div>
+    <div class="sim-ctrl"><span class="sim-ctrl-label">Monthly income (after tax)</span><input type="range" min="500" max="6000" step="100" value="2000" id="bg-i" oninput="calcBudget()"><span class="sim-ctrl-val" id="bg-iv">$2,000</span></div>
+    <div class="budget-split">
+      <div class="budget-bucket" style="background:rgba(34,197,94,.08);border:0.5px solid rgba(34,197,94,.2)">
+        <div class="bucket-lbl" style="color:var(--glo)">Needs 50%</div>
+        <div class="bucket-val" style="color:var(--glo)" id="bg-needs">$1,000</div>
+        <div class="bucket-sub" style="color:var(--muted)">rent · food · bills</div>
+      </div>
+      <div class="budget-bucket" style="background:rgba(251,191,36,.08);border:0.5px solid rgba(251,191,36,.2)">
+        <div class="bucket-lbl" style="color:var(--amber)">Wants 30%</div>
+        <div class="bucket-val" style="color:var(--amber)" id="bg-wants">$600</div>
+        <div class="bucket-sub" style="color:var(--muted)">dining · fun · apps</div>
+      </div>
+      <div class="budget-bucket" style="background:rgba(59,130,246,.08);border:0.5px solid rgba(59,130,246,.2)">
+        <div class="bucket-lbl" style="color:var(--blue)">Savings 20%</div>
+        <div class="bucket-val" style="color:var(--blue)" id="bg-save">$400</div>
+        <div class="bucket-sub" style="color:var(--muted)">invest · emergency</div>
+      </div>
+    </div>
+  </div>
+  <div class="sim-card">
+    <div class="sim-title">Credit score breakdown</div>
+    <div class="sim-desc">Your FICO score is made of 5 components. Understand each one to build your score from zero.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px">
+      <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:12px;font-weight:500;color:var(--text)">Payment history</span><span style="font-family:var(--mono);font-size:11px;color:var(--glo)">35%</span></div><div class="prog-bar"><div class="prog-fill" style="width:35%;background:var(--glo)"></div></div></div>
+      <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:12px;font-weight:500;color:var(--text)">Credit utilization</span><span style="font-family:var(--mono);font-size:11px;color:var(--amber)">30%</span></div><div class="prog-bar"><div class="prog-fill" style="width:30%;background:var(--amber)"></div></div></div>
+      <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:12px;font-weight:500;color:var(--text)">Length of history</span><span style="font-family:var(--mono);font-size:11px;color:var(--blue)">15%</span></div><div class="prog-bar"><div class="prog-fill" style="width:15%;background:var(--blue)"></div></div></div>
+      <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:12px;font-weight:500;color:var(--text)">New credit & mix</span><span style="font-family:var(--mono);font-size:11px;color:var(--purple)">20%</span></div><div class="prog-bar"><div class="prog-fill" style="width:20%;background:var(--purple)"></div></div></div>
+    </div>
+    <div class="sim-result" style="margin-top:14px"><div class="sim-result-lbl">Key takeaway</div><div style="font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6">Never miss a payment. Payment history alone is 35% of your score — one missed payment can drop you 60–110 points and stays on your report for 7 years.</div></div>
+  </div>
+</div>
+
+<!-- GLOSSARY -->
+<div id="pg-glossary" class="page">
+  <h2 style="margin-bottom:6px">Financial glossary</h2>
+  <p style="color:var(--slate);font-size:13px;margin-bottom:18px">Every term you'll encounter in college — defined simply.</p>
+  <input class="gloss-search" type="text" placeholder="Search terms, e.g. 'compound' or 'credit'" id="gs-input" oninput="filterGloss(this.value)">
+  <div class="gloss-filters">
+    <button class="gloss-filter active" onclick="setGlossFilter('all',this)">All</button>
+    <button class="gloss-filter" onclick="setGlossFilter('investing',this)">Investing</button>
+    <button class="gloss-filter" onclick="setGlossFilter('budgeting',this)">Budgeting</button>
+    <button class="gloss-filter" onclick="setGlossFilter('credit',this)">Credit</button>
+    <button class="gloss-filter" onclick="setGlossFilter('loans',this)">Loans</button>
+    <button class="gloss-filter" onclick="setGlossFilter('economics',this)">Economics</button>
+  </div>
+  <div id="gloss-list"></div>
+</div>
+
+<!-- COMMUNITY -->
+<div id="pg-community" class="page">
+  <h2 style="margin-bottom:6px">Campus leaderboard</h2>
+  <p style="color:var(--slate);font-size:13px;margin-bottom:22px">Learn alongside peers. The leaderboard resets each semester — anyone can reach the top.</p>
+  <div id="lb-mount"></div>
+</div>
+
+</div>
+<script>
+const GLOSSARY=[
+  {word:"Compound interest",cat:"investing",def:"Interest earned on both your principal and previously earned interest. Over decades, it turns small deposits into serious wealth."},
+  {word:"50/30/20 rule",cat:"budgeting",def:"A budgeting framework: 50% of after-tax income to needs, 30% to wants, 20% to savings or debt repayment."},
+  {word:"Credit score (FICO)",cat:"credit",def:"A 300–850 number summarizing your creditworthiness. Payment history (35%) and utilization (30%) matter most."},
+  {word:"APR",cat:"credit",def:"Annual Percentage Rate — the yearly cost of borrowing, including fees. Always compare APRs before taking any loan or card."},
+  {word:"Index fund",cat:"investing",def:"A low-fee investment that mirrors a market index (e.g. S&P 500). Proven long-term performer for passive investors."},
+  {word:"Emergency fund",cat:"budgeting",def:"3–6 months of expenses in a liquid savings account. Protects you from debt spirals when unexpected costs hit."},
+  {word:"Federal student loan",cat:"loans",def:"Government-issued loan with fixed rates, income-driven repayment options, and potential forgiveness programs."},
+  {word:"FAFSA",cat:"loans",def:"Free Application for Federal Student Aid. Required to access federal grants, work-study, and government loans."},
+  {word:"Roth IRA",cat:"investing",def:"A retirement account funded with after-tax dollars. All growth and withdrawals are tax-free. Ideal to open in your 20s."},
+  {word:"Net worth",cat:"budgeting",def:"Assets minus liabilities. A snapshot of your financial health — aim to grow it consistently, not instantly."},
+  {word:"Credit utilization",cat:"credit",def:"The % of available credit you're using. Keep it below 30% (ideally below 10%) to protect your FICO score."},
+  {word:"Inflation",cat:"economics",def:"The rate prices rise over time. If your money isn't growing faster than inflation (~3%/yr), your purchasing power shrinks."},
+  {word:"Income-driven repayment",cat:"loans",def:"A federal loan plan capping monthly payments at 10–20% of discretionary income. Balance forgiven after 20–25 years."},
+  {word:"Tax bracket",cat:"economics",def:"A range of income taxed at a specific rate. The US uses a marginal system — only income above each threshold is taxed at the higher rate."},
+  {word:"Diversification",cat:"investing",def:"Spreading investments across multiple assets to reduce risk. A diversified portfolio loses less when any single investment tanks."},
+  {word:"Liquidity",cat:"economics",def:"How quickly an asset can be converted to cash. Savings accounts are liquid; real estate is not."},
+];
+const LEADERBOARD=[
+  {name:"Jordan M.",xp:1240,ini:"JM",bg:"#16a34a",fg:"#f0fdf4",badge:"Top earner"},
+  {name:"Priya K.",xp:1095,ini:"PK",bg:"#7c3aed",fg:"#faf5ff",badge:"Quiz master"},
+  {name:"Alex (you)",xp:340,ini:"AX",bg:"#1d4ed8",fg:"#eff6ff",badge:"On a streak",you:true},
+  {name:"Marcus T.",xp:290,ini:"MT",bg:"#b45309",fg:"#fef3c7"},
+  {name:"Chloe R.",xp:155,ini:"CR",bg:"#c2410c",fg:"#fff7ed"},
+];
+const LESSONS={
+  budget:{color:"linear-gradient(135deg,#132918 0%,#1a3d22 100%)",accent:"#22c55e",tag:"Budgeting Basics · Lesson 7 of 10",title:"The 50/30/20 Rule in Real Life",intro:"Most overspending happens in the 'wants' bucket — and most college students don't realize it until they're overdrawn. This rule gives you a simple, proven framework to allocate every dollar the moment it lands in your account.",concepts:[{icon:"💡",label:"Why it works",text:"The rule is a percentage-based system, so it scales with any income. Whether you earn $800/month or $8,000, the proportions keep your finances balanced automatically."},{icon:"⚠️",label:"Common mistake",text:"Treating student loan disbursements as income. They're debt — spending them as 'extra money' is one of the fastest paths into serious financial trouble."}],quiz:{q:"You earn $2,400/month after taxes. Using 50/30/20, how much should go to savings?",opts:["$240 (10%)","$480 (20%)","$720 (30%)","$960 (40%)"],correct:1,feedback:"Correct. 20% × $2,400 = $480/month to savings or debt payoff. Over a year that's $5,760 — enough to build a full emergency fund and still contribute to an index fund."}},
+  invest:{color:"linear-gradient(135deg,#1c1400 0%,#2d1f00 100%)",accent:"#fbbf24",tag:"Intro to Investing · Lesson 1 of 8",title:"Why Starting at 20 Beats Starting at 30",intro:"Compound interest doesn't add money — it multiplies it. The same monthly contribution made a decade earlier can result in hundreds of thousands more by retirement.",concepts:[{icon:"📊",label:"The math",text:"$200/month at 7% return: start at 20 → $525k by 65. Start at 30 → $227k by 65. Same contributions, same rate — the 10-year head start creates $298,000 more."},{icon:"💡",label:"Practical first step",text:"Open a Roth IRA before your first real paycheck. You can contribute as little as $1. The account age matters for certain tax benefits — starting early costs nothing."}],quiz:{q:"Compound interest means your interest is calculated on what base amount each period?",opts:["Only your original deposit","Only the interest earned","Your deposit plus all accumulated interest","A fixed amount set by the bank"],correct:2,feedback:"Exactly right. Compound interest is calculated on the full balance — principal plus all previously earned interest. This is why growth accelerates over time rather than staying linear."}},
+  credit:{color:"linear-gradient(135deg,#1a0800 0%,#2d1200 100%)",accent:"#f97316",tag:"Credit & Debt · Lesson 1 of 7",title:"Your Credit Score: Every Factor Explained",intro:"Your credit score will affect your ability to rent an apartment, buy a car, secure a mortgage, and in some industries, get a job. Understanding how it's built lets you build it intentionally from day one.",concepts:[{icon:"🏗️",label:"Build from zero",text:"A secured card (where you deposit $200–500 as collateral) is the standard starting point. Use it for one recurring expense, pay in full monthly, and your score begins building immediately."},{icon:"⚠️",label:"Biggest trap",text:"Carrying a balance to 'build credit' is a myth and costs you money. Pay in full every month. Credit utilization matters more than balances."}],quiz:{q:"What is the single largest factor in your FICO credit score?",opts:["Total amount of debt owed","Payment history","Length of credit history","Credit utilization ratio"],correct:1,feedback:"Payment history makes up 35% of your FICO score — more than any other factor. One missed payment can drop your score 60–110 points and stays on your report for 7 years."}},
+  loans:{color:"linear-gradient(135deg,#020e1f 0%,#051e3e 100%)",accent:"#3b82f6",tag:"Student Loans · Lesson 1 of 9",title:"Federal vs. Private Loans: Know the Difference",intro:"Not all student loans are equal, and the difference can cost or save you tens of thousands of dollars over your repayment period. Before signing anything, understand what you're agreeing to.",concepts:[{icon:"🏛️",label:"Federal advantages",text:"Fixed rates, income-driven repayment options, Public Service Loan Forgiveness after 10 years of qualifying work, and deferment during hardship."},{icon:"🏦",label:"Private loan risks",text:"Variable interest rates that can rise sharply, no income-driven repayment, no forgiveness programs, and often require a co-signer. Should be a last resort."}],quiz:{q:"Interest on unsubsidized federal loans while you're still in school — what happens to it?",opts:["It pauses until graduation","The government pays it for you","It accumulates and is added to your balance","It disappears if you graduate on time"],correct:2,feedback:"Unsubsidized loan interest accrues during school and gets capitalized (added to your principal) at graduation. A $30,000 loan at 5.5% for 4 years adds ~$6,600 to your balance before you make a single payment."}},
+  taxes:{color:"linear-gradient(135deg,#120020 0%,#200040 100%)",accent:"#a855f7",tag:"Taxes 101 · Lesson 1 of 6",title:"How Tax Brackets Actually Work",intro:"The biggest tax misconception: that earning more money can leave you with less take-home pay. Marginal tax brackets don't work that way — and understanding this changes how you think about every raise.",concepts:[{icon:"📐",label:"Marginal vs effective rate",text:"A 22% bracket means only income above the threshold is taxed at 22%. Your effective rate (total tax ÷ total income) is always lower. Most college students pay 10–12%."},{icon:"📝",label:"First return tip",text:"File even if you're not required to — you may be owed a refund from withholding. FreeTaxUSA or the IRS Free File program costs $0 and takes about 20 minutes."}],quiz:{q:"If you're in the 22% tax bracket, what percentage of ALL your income is taxed at 22%?",opts:["All of it","Only the portion above the 22% threshold","Only your investment income","22% minus standard deductions"],correct:1,feedback:"Only the income above the bracket threshold is taxed at 22%. Income in lower brackets is still taxed at those lower rates. Earning more never puts you in a worse position."}}
+};
+let answered=false;
+function nav(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pg-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function openLesson(key){
+  const l=LESSONS[key];if(!l)return;
+  nav('lesson',null);answered=false;
+  document.getElementById('lesson-mount').innerHTML=`
+    <div class="lesson-header" style="background:${l.color};border:0.5px solid ${l.accent}33">
+      <div class="lesson-tag" style="color:${l.accent}">${l.tag}</div>
+      <h2>${l.title}</h2><p>${l.intro}</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      ${l.concepts.map(c=>`<div class="content-card"><h3>${c.icon} ${c.label}</h3><p style="font-size:12px;color:var(--slate);line-height:1.6">${c.text}</p></div>`).join('')}
+    </div>
+    <div class="content-card">
+      <h3>🧠 Knowledge check</h3>
+      <div class="quiz-q">${l.quiz.q}</div>
+      <div class="quiz-opts">
+        ${l.quiz.opts.map((o,i)=>`<button class="quiz-opt" id="qopt${i}" onclick="checkAnswer(${i},${l.quiz.correct},'${l.quiz.feedback.replace(/'/g,"\\'")}')"><span class="quiz-opt-key">${['A','B','C','D'][i]}</span>${o}</button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="qfb"></div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:10px">
+      <button class="btn-ghost" style="flex:1" onclick="nav('learn',document.querySelectorAll('.nav-btn')[1])">← Back to modules</button>
+    </div>`;
+}
+function checkAnswer(i,correct,feedback){
+  if(answered)return;answered=true;
+  const opts=document.querySelectorAll('.quiz-opt');
+  opts.forEach(o=>o.setAttribute('disabled','true'));
+  opts[correct].classList.add('correct');
+  if(i!==correct)opts[i].classList.add('wrong');
+  const fb=document.getElementById('qfb');
+  const right=i===correct;
+  fb.textContent=(right?'✓ ':'✗ Not quite — ')+feedback;
+  fb.style.background=right?'rgba(34,197,94,.08)':'rgba(239,68,68,.08)';
+  fb.style.border=right?'0.5px solid rgba(34,197,94,.25)':'0.5px solid rgba(239,68,68,.2)';
+  fb.style.color=right?'var(--glo)':'#fca5a5';
+  fb.style.borderRadius='var(--radius-sm)';
+  fb.classList.add('show');
+  if(right){document.getElementById('xp-count').textContent=+document.getElementById('xp-count').textContent+20;}
+}
+function calcCI(){
+  const p=+document.getElementById('ci-p').value,m=+document.getElementById('ci-m').value,rA=+document.getElementById('ci-r').value,y=+document.getElementById('ci-y').value;
+  const r=rA/100/12,n=y*12;
+  document.getElementById('ci-pv').textContent='$'+p.toLocaleString();
+  document.getElementById('ci-mv').textContent='$'+m;
+  document.getElementById('ci-rv').textContent=rA.toFixed(1)+'%';
+  document.getElementById('ci-yv').textContent=y+' yrs';
+  const fv=p*Math.pow(1+r,n)+(r>0?m*(Math.pow(1+r,n)-1)/r:m*n);
+  const cont=p+m*n,gain=fv-cont;
+  document.getElementById('ci-out').textContent='$'+Math.round(fv).toLocaleString();
+  document.getElementById('ci-sub').textContent='Contributed: $'+Math.round(cont).toLocaleString()+' · Interest earned: $'+Math.round(gain).toLocaleString();
+  const steps=8,vals=[],greens=['#166534','#15803d','#16a34a','#22c55e','#4ade80','#86efac','#bbf7d0','#dcfce7'].reverse().slice(0,8);
+  let max=0;
+  for(let s=1;s<=steps;s++){const ny=Math.round(y*s/steps),nn=ny*12,v=p*Math.pow(1+r,nn)+(r>0?m*(Math.pow(1+r,nn)-1)/r:m*nn);vals.push({v,y:ny});if(v>max)max=v;}
+  document.getElementById('ci-bars').innerHTML=vals.map((x,i)=>`<div class="bar" style="height:${Math.round(x.v/max*62)+4}px;background:${greens[i]}"><div class="bar-tip">yr ${x.y}: $${Math.round(x.v/1000)}k</div></div>`).join('');
+}
+function calcBudget(){
+  const inc=+document.getElementById('bg-i').value;
+  document.getElementById('bg-iv').textContent='$'+inc.toLocaleString();
+  document.getElementById('bg-needs').textContent='$'+Math.round(inc*.5).toLocaleString();
+  document.getElementById('bg-wants').textContent='$'+Math.round(inc*.3).toLocaleString();
+  document.getElementById('bg-save').textContent='$'+Math.round(inc*.2).toLocaleString();
+}
+let glossFilter='all';
+function setGlossFilter(cat,btn){glossFilter=cat;document.querySelectorAll('.gloss-filter').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderGloss();}
+function filterGloss(v){renderGloss(v);}
+function renderGloss(search=''){
+  const q=(search||document.getElementById('gs-input').value).toLowerCase();
+  const tagC={investing:'rgba(251,191,36,.1)',budgeting:'rgba(34,197,94,.08)',credit:'rgba(249,115,22,.1)',loans:'rgba(59,130,246,.1)',economics:'rgba(168,85,247,.1)'};
+  const tagT={investing:'var(--amber)',budgeting:'var(--glo)',credit:'var(--coral)',loans:'var(--blue)',economics:'var(--purple)'};
+  const items=GLOSSARY.filter(t=>(glossFilter==='all'||t.cat===glossFilter)&&(!q||t.word.toLowerCase().includes(q)||t.def.toLowerCase().includes(q)));
+  document.getElementById('gloss-list').innerHTML=items.length?items.map(t=>`<div class="term"><div class="term-word">${t.word}</div><div class="term-def">${t.def}</div><span class="term-tag" style="background:${tagC[t.cat]};color:${tagT[t.cat]}">${t.cat}</span></div>`).join(''):`<div style="color:var(--slate);font-size:13px;padding:16px 0;text-align:center">No terms match.</div>`;
+}
+function renderLB(){
+  const medals=['🥇','🥈','🥉'];
+  document.getElementById('lb-mount').innerHTML=LEADERBOARD.map((u,i)=>`<div class="lb-row" style="${u.you?'border-color:rgba(59,130,246,.4);background:rgba(59,130,246,.06)':''}"><div class="lb-rank">${medals[i]||i+1}</div><div class="lb-av" style="background:${u.bg};color:${u.fg}">${u.ini}</div><div class="lb-name">${u.name}</div>${u.badge?`<span class="lb-badge" style="${u.you?'background:rgba(59,130,246,.12);color:var(--blue)':''}">${u.badge}</span>`:''}<div class="lb-xp">⚡ ${u.xp.toLocaleString()}</div></div>`).join('');
+}
+function scrollToSim(){nav('tools',document.querySelectorAll('.nav-btn')[2]);setTimeout(()=>document.getElementById('sim-budget').scrollIntoView({behavior:'smooth'}),120);}
+calcCI();calcBudget();renderGloss();renderLB();
+</script>
+</body>
+</html>
